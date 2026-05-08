@@ -1,6 +1,7 @@
 import { catalogRouter } from "~/server/api/routers/catalog";
 import { barcodesRouter } from "~/server/api/routers/barcodes";
 import { listsRouter } from "~/server/api/routers/lists";
+import { orderGuidesRouter } from "~/server/api/routers/orderGuides";
 import { postRouter } from "~/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   barcodes: barcodesRouter,
   catalog: catalogRouter,
   lists: listsRouter,
+  orderGuides: orderGuidesRouter,
   post: postRouter,
 });
 

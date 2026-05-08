@@ -28,6 +28,7 @@
     "@trpc/client": "^11.0.0",
     "@trpc/react-query": "^11.0.0",
     "@trpc/server": "^11.0.0",
+    "@vercel/blob": "^2.3.3",
     "@zxing/browser": "^0.2.0",
     "bwip-js": "^4.10.1",
     "class-variance-authority": "^0.7.1",

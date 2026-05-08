@@ -1,4 +1,5 @@
 import {
+  FileSpreadsheet,
   Home,
   LayoutGrid,
   Search,
@@ -28,6 +29,14 @@ export const PRIMARY_NAV: NavItem[] = [
     label: "Lists",
     href: "/lists",
     icon: LayoutGrid,
+    mobile: true,
+  },
+  {
+    id: "order-guides",
+    label: "Order guides",
+    href: "/order-guides",
+    icon: FileSpreadsheet,
+    shortLabel: "Guides",
     mobile: true,
   },
   {

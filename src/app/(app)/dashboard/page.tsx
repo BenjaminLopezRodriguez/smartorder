@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Barcode, Bell, ChevronDown, ClipboardList, Plus } from "lucide-react";
+import { Barcode, Bell, ChevronDown, ClipboardList, FileSpreadsheet, Plus } from "lucide-react";
 import { type Metadata } from "next";
 
 import { api } from "~/trpc/server";
@@ -101,6 +101,14 @@ export default async function DashboardPage() {
       >
         Scan barcodes
         <Barcode className="h-4 w-4" />
+      </Link>
+
+      <Link
+        href="/order-guides/import"
+        className="bg-surface border-border text-foreground mt-3 flex h-12 items-center justify-center gap-2 rounded-xl border text-sm font-semibold shadow-card hover:bg-surface-2"
+      >
+        Import order guide
+        <FileSpreadsheet className="h-4 w-4" />
       </Link>
 
       {/* Recent Lists */}

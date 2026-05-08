@@ -77,6 +77,57 @@ export const listItems = createTable(
   ],
 );
 
+export const orderGuides = createTable(
+  "order_guide",
+  (d) => ({
+    id: d.uuid().primaryKey().defaultRandom(),
+    name: d.varchar({ length: 256 }).notNull(),
+    vendor: d.varchar({ length: 256 }),
+    sourceType: d.varchar({ length: 16 }).notNull(),
+    fileUrl: d.text(),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    index("order_guide_created_at_idx").on(t.createdAt),
+    index("order_guide_vendor_idx").on(t.vendor),
+  ],
+);
+
+export const orderGuideItems = createTable(
+  "order_guide_item",
+  (d) => ({
+    id: d.uuid().primaryKey().defaultRandom(),
+    orderGuideId: d
+      .uuid()
+      .notNull()
+      .references(() => orderGuides.id, { onDelete: "cascade" }),
+    rawName: d.varchar({ length: 512 }).notNull(),
+    normalizedName: d.varchar({ length: 512 }),
+    vendor: d.varchar({ length: 256 }),
+    category: d.varchar({ length: 128 }),
+    packSize: d.varchar({ length: 64 }),
+    unitType: d.varchar({ length: 32 }).notNull().default("case"),
+    barcode: d.varchar({ length: 64 }),
+    sortOrder: d.integer().notNull().default(0),
+    catalogItemId: d
+      .uuid()
+      .references(() => catalogItems.id, { onDelete: "set null" }),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    index("order_guide_item_guide_idx").on(t.orderGuideId),
+    index("order_guide_item_catalog_idx").on(t.catalogItemId),
+  ],
+);
+
 export const barcodeScans = createTable(
   "barcode_scan",
   (d) => ({

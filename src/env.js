@@ -9,6 +9,8 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
     DATABASE_URL_UNPOOLED: z.string().url().optional(),
+    /** Optional: enables PDF/image order guide uploads via Vercel Blob. */
+    BLOB_READ_WRITE_TOKEN: z.string().optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -30,6 +32,7 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
+    BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
     NODE_ENV: process.env.NODE_ENV,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },

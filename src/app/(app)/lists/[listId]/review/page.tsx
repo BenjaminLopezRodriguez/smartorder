@@ -53,7 +53,7 @@ export default async function ReviewPage({
 
       {/* Items */}
       <ul className="bg-surface border-border divide-border divide-y overflow-hidden rounded-xl border shadow-card">
-        {list.items.map((item, i) => {
+        {list.items.map((item, _i) => {
           const scanned = item.scannedCases + item.scannedUnits;
           const done = scanned > 0;
           return (

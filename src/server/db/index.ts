@@ -16,3 +16,8 @@ const conn = globalForDb.conn ?? postgres(env.DATABASE_URL);
 if (env.NODE_ENV !== "production") globalForDb.conn = conn;
 
 export const db = drizzle(conn, { schema });
+
+/** Drizzle transaction client type for nested helpers. */
+export type DbTransaction = Parameters<
+  Parameters<(typeof db)["transaction"]>[0]
+>[0];
