@@ -1,3 +1,6 @@
+import { catalogRouter } from "~/server/api/routers/catalog";
+import { barcodesRouter } from "~/server/api/routers/barcodes";
+import { listsRouter } from "~/server/api/routers/lists";
 import { postRouter } from "~/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
@@ -7,6 +10,9 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  barcodes: barcodesRouter,
+  catalog: catalogRouter,
+  lists: listsRouter,
   post: postRouter,
 });
 

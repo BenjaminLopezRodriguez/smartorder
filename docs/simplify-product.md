@@ -1,0 +1,244 @@
+# SmartOrder — Simplify the Product (Keep Core Loop)
+
+Goal: **ship a smaller “operational companion” MVP** that proves the core value (faster, calmer order-prep) while avoiding expensive/fragile AI + platform surface area too early.
+
+This doc is intentionally opinionated. When in doubt, keep the **guided scan workflow** and delete everything else.
+
+---
+
+## The core loop (do not compromise)
+
+**Core promise**: “Turn paper/PDF order guides into a searchable catalog, then guide order-prep with Zebra-assisted scanning, and export a clean order list.”
+
+Minimum loop:
+
+1. **Catalog exists** (even if imported manually at first)
+2. **Create a list** (from catalog)
+3. **Guided scan session** (one item at a time, count cases/units)
+4. **Review + Export** (shareable output)
+
+Everything else is either *supporting* the loop (nice-to-have) or *distracting* from it (cut).
+
+---
+
+## What to simplify right now (big wins)
+
+### 1) Replace “Import Order Guide (OCR + AI)” with “Upload + Human-assisted mapping”
+
+**Keep**:
+- Upload a PDF/photo
+- Store the file and attach it to a “Vendor Guide” record
+- Let the user create catalog items from it (manual entry + fast shortcuts)
+
+**Defer**:
+- Table detection
+- GPT parsing
+- Confidence scoring and “no hallucinations” flows
+
+**Why**: OCR + AI parsing is the highest risk surface. You can still prove the product with a “catalog creation wizard” and add automation later.
+
+Practical MVP approach:
+- Offer **CSV import** first (most operators can export from something)
+- Then add “photo/PDF upload” as evidence + future pipeline input
+
+### 2) Collapse “Voice build list” into “Fast add + recent items”
+
+**Keep**:
+- Search box
+- “Add to list” from results
+- Recent/frequent items
+
+**Defer**:
+- Speech-to-text
+- Natural language parsing (“add 2 cases…”)  
+
+**Why**: Voice introduces model quality, microphone permissions, noisy environments, and error recovery complexity. A fast search + recents gets 80% of the benefit.
+
+### 3) Make scan tracking explicit (don’t over-automate scan detection)
+
+**Keep**:
+- Guided scan screen
+- Large product image + barcode stack
+- Case/unit counter with +/– and editable number
+- “Next” progression
+
+**Defer**:
+- “Detect Zebra scan laser activity via camera”
+- Proximity/light sensor heuristics
+
+**Why**: “Scan detection” is clever but brittle. Early MVP can still succeed with **tap-to-increment** (or hardware button / keyboard shortcuts on web).
+
+Later enhancement:
+- Add a simple “Scan detected” hotkey / big on-screen button
+- Only then experiment with camera-based detection
+
+### 4) Treat BackroomVision as “photo log” first (no CV)
+
+**Keep**:
+- Capture/upload photo
+- Feed/grid of snapshots
+- Simple metadata (location label, uploadedBy, timestamp)
+
+**Defer**:
+- Segmentation, OCR labels/dates, estimated counts, aging detection
+
+**Why**: CV is another large bet. A photo log alone can be valuable as “shared visual memory,” and it creates data for later models.
+
+#### Web camera MVP note (permissions + iOS reality)
+
+For a web-first MVP, treat camera as progressive enhancement:
+
+- **Baseline**: file upload (`<input type="file" accept="image/*" capture>`) works broadly (including iOS Safari’s native camera UI).
+- **Enhanced**: `navigator.mediaDevices.getUserMedia()` for inline preview on supported browsers.
+- **UX rule**: request camera permission **only after a clear user action** (“Take photo”), not on initial page load—permission prompts convert poorly when unexpected.
+
+### 5) Kill onboarding/tutorial/auth complexity (until it’s needed)
+
+**Keep**:
+- One workspace (single-org) in MVP
+- Lightweight settings
+
+**Defer**:
+- Multi-org flows
+- Invite/members management
+- Tutorial carousel (replace with 1-page “Getting started”)
+
+**Why**: early users are often founder-led deployments. Reduce screens and state.
+
+---
+
+## The simplified MVP feature set (recommended)
+
+### “MVP v0.1” (2–4 weeks)
+
+**Catalog**
+- Create/edit items (name, vendor, pack size, unit type, barcode optional)
+- CSV import/export
+- Search + filters (vendor/category)
+
+**Lists**
+- Create list
+- Add items from catalog
+- Set target quantities (cases/units)
+- Status: draft → scanning → review → complete
+
+**Guided scan**
+- One-item focus screen
+- Quick increment/decrement + editable count
+- “Next” navigation + progress indicator
+
+**Review + Export**
+- Review all items + totals
+- Export as CSV + “copy to clipboard” plain text
+
+**Backroom (lightweight)**
+- Capture/upload photo
+- Feed grid with location label + timestamp
+
+Non-goals:
+- OCR/AI parsing
+- Voice
+- Automated scan detection
+- CV detection/aging
+- Multi-tenant org management
+
+---
+
+## What to cut from the current concept (explicitly)
+
+Cut (for MVP):
+- AI inventory recommendations
+- Out-of-stock detection via camera on Zebra screens
+- “Instant fuzzy search across every imported guide” (you can still do search; just don’t promise “every imported guide”)
+- Any “compare snapshots over time” analytics
+- Any “estimated cases” generated by AI
+
+Keep as future bets:
+- OCR ingestion pipeline (once the core loop is proven)
+- Scan-detection experiments (once scanning UX is stable)
+- BackroomVision CV (once photo capture is habitual)
+
+---
+
+## UX simplifications (screen count reduction)
+
+Target: **4 primary screens + 1 modal**.
+
+- **Dashboard**: “Resume list” + create list + capture photo
+- **Catalog Search**: search + add-to-list
+- **List Detail**: items + start scan
+- **Scan**: guided item-by-item
+- **Review/Export**: summary + export
+
+Everything else becomes:
+- Settings is minimal (workspace name, default unit type)
+- Onboarding is a single “Getting started” page or inline empty-state
+
+---
+
+## Product principles (decision filter)
+
+1. **The phone/web app is not the scanner.**
+2. **The scan session is the signature UX.** If it doesn’t improve scanning, it’s probably cut.
+3. **Prefer deterministic flows over probabilistic automation** early.
+4. **Reduce cognitive load**: fewer modes, fewer branching paths, fewer tabs.
+5. **Make the “happy path” 30 seconds**: open → resume list → scan next item.
+
+---
+
+## Validation framing (how to keep scope honest)
+
+Use a strict filter:
+
+- **MVP bucket**: required to complete the core loop end-to-end
+- **Post-launch bucket**: improves speed/quality but not required to learn
+- **Not now bucket**: attractive, but adds automation/ML risk or multiplies screens
+
+If a feature doesn’t shorten “time to complete a list” or reduce errors in scan/review, it’s probably **not MVP**.
+
+---
+
+## Metrics that confirm “core works”
+
+You’re looking for proof that operators finish the workflow faster and with fewer mistakes.
+
+Suggested MVP metrics:
+- **Time to build a list** (baseline vs SmartOrder)
+- **Time per scanned item** in guided scan
+- **# of edits during review** (proxy for scan quality)
+- **Export usage rate** (if they export, it’s real)
+- **Repeat weekly use** (retention in an operational context)
+
+---
+
+## Phased roadmap (add complexity only when earned)
+
+### Phase 1: Prove the loop
+- Catalog + list + guided scan + export
+- Photo log capture
+
+### Phase 2: Make inputs faster
+- CSV import improvements
+- Better “recents/favorites”
+- Optional voice (only if requested by users)
+
+### Phase 3: Automate ingestion
+- OCR extraction + human review UI
+- AI parsing for “suggested rows” (never auto-commit)
+
+### Phase 4: BackroomVision intelligence
+- OCR labels/dates on images
+- Aging detection
+- Item suggestions to lists
+
+---
+
+## Implementation implication for the web app
+
+Given the current web routes (`/dashboard`, `/lists`, `/search`, `/backroom`, `/backroom/capture`, `/settings`), the simplification path is:
+
+- Make `/lists` the center: list creation + list detail + scan + review/export (even if all in one route group)
+- Keep `/search` as “catalog search” only (no AI promises)
+- Keep `/backroom` as a photo log (no detection)
+- Keep `/settings` minimal or hide it until needed
+

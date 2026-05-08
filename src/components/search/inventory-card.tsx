@@ -18,9 +18,15 @@ export interface InventoryItem {
 
 interface InventoryCardProps {
   item: InventoryItem;
+  onAddToList?: (itemId: string) => void;
+  addToListLabel?: string;
 }
 
-export function InventoryCard({ item }: InventoryCardProps) {
+export function InventoryCard({
+  item,
+  onAddToList,
+  addToListLabel = "Add to list",
+}: InventoryCardProps) {
   const confidencePct =
     typeof item.confidence === "number"
       ? Math.round(item.confidence * 100)
@@ -83,9 +89,13 @@ export function InventoryCard({ item }: InventoryCardProps) {
           <Button variant="ghost" size="sm">
             Details
           </Button>
-          <Button size="sm">
+          <Button
+            size="sm"
+            onClick={() => onAddToList?.(item.id)}
+            disabled={!onAddToList}
+          >
             <Plus className="h-4 w-4" />
-            Add to list
+            {addToListLabel}
           </Button>
         </div>
       </div>

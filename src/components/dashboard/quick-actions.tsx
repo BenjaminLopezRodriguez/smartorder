@@ -25,7 +25,7 @@ const ACTIONS = [
     icon: ScanLine,
     label: "Start scan session",
     description: "Guide a Zebra-assisted item-by-item run.",
-    href: "/lists#scan",
+    href: "/lists",
     emphasis: true,
   },
   {
@@ -33,7 +33,7 @@ const ACTIONS = [
     icon: Camera,
     label: "Capture backroom",
     description: "Snapshot inventory for shared visibility.",
-    href: "/backroom#capture",
+    href: "/backroom/capture",
     emphasis: false,
   },
 ];

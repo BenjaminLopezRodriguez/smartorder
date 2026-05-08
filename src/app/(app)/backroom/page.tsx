@@ -1,10 +1,11 @@
+import Link from "next/link";
 import { Camera, Search } from "lucide-react";
 import { type Metadata } from "next";
 
 import {
-  SnapshotCard,
   type BackroomSnapshot,
 } from "~/components/backroom/snapshot-card";
+import { BackroomSnapshotsSection } from "~/components/backroom/snapshots-section";
 import { Button } from "~/components/ui/button";
 import { PageHeader } from "~/components/ui/page-header";
 import { Section } from "~/components/ui/section";
@@ -88,9 +89,11 @@ export default function BackroomPage() {
               <Search className="h-4 w-4" />
               Search snapshots
             </Button>
-            <Button size="lg">
-              <Camera className="h-4 w-4" />
-              Capture
+            <Button asChild size="lg">
+              <Link href="/backroom/capture">
+                <Camera className="h-4 w-4" />
+                Capture
+              </Link>
             </Button>
           </>
         }
@@ -124,15 +127,8 @@ export default function BackroomPage() {
         />
       </div>
 
-      <Section
-        title="Recent snapshots"
-        description={`${SNAPSHOTS.length} captures across the team`}
-      >
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {SNAPSHOTS.map((snapshot) => (
-            <SnapshotCard key={snapshot.id} snapshot={snapshot} />
-          ))}
-        </div>
+      <Section title="Recent snapshots">
+        <BackroomSnapshotsSection initialSnapshots={SNAPSHOTS} />
       </Section>
     </div>
   );
