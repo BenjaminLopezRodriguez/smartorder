@@ -241,3 +241,4 @@ Never add fields to these models without reading `src/server/db/schema.ts` first
 | Testing strategy | `docs/engineering/testing.md` |
 | Security | `docs/engineering/security.md` |
 | Simplify product (MVP guide) | `docs/simplify-product.md` |
+| Next steps & engineering direction | `docs/next-steps.md` |

@@ -40,3 +40,12 @@ export function formatRelativeTime(date: Date, now: Date = new Date()): string {
 export function formatNumber(value: number): string {
   return new Intl.NumberFormat("en-US").format(value);
 }
+
+export function formatShortDate(d: Date | null | undefined): string {
+  if (!d) return "";
+  return d.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { and, asc, desc, eq, ilike } from "drizzle-orm";
 
 import { parseOrderGuideFromCsvText } from "~/lib/order-guide-csv";
+import { normalizeInventoryRow } from "~/server/inventory-normalization";
 import { env } from "~/env";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import type { DbTransaction } from "~/server/db";
@@ -125,15 +126,17 @@ export const orderGuidesRouter = createTRPCRouter({
 
         let sortOrder = 0;
         for (const r of parsed.rows) {
+          const norm = normalizeInventoryRow(r);
+
           const catalogItemId = await resolveCatalogItemId(
             tx,
             {
-              normalizedName: r.normalizedName,
-              vendor: r.vendor,
-              category: r.category,
-              packSize: r.packSize,
-              unitType: r.unitType,
-              barcode: r.barcode,
+              normalizedName: norm.normalized.normalizedName,
+              vendor: norm.normalized.vendor,
+              category: norm.normalized.category,
+              packSize: norm.normalized.packSize,
+              unitType: norm.normalized.unitType,
+              barcode: norm.normalized.barcode,
             },
             input.syncCatalog,
           );
@@ -141,12 +144,12 @@ export const orderGuidesRouter = createTRPCRouter({
           await tx.insert(orderGuideItems).values({
             orderGuideId: guide.id,
             rawName: r.rawName.slice(0, 512),
-            normalizedName: r.normalizedName.slice(0, 512),
-            vendor: r.vendor?.slice(0, 256),
-            category: r.category?.slice(0, 128),
-            packSize: r.packSize?.slice(0, 64),
-            unitType: r.unitType,
-            barcode: r.barcode?.slice(0, 64),
+            normalizedName: norm.normalized.normalizedName.slice(0, 512),
+            vendor: norm.normalized.vendor?.slice(0, 256),
+            category: norm.normalized.category?.slice(0, 128),
+            packSize: norm.normalized.packSize?.slice(0, 64),
+            unitType: norm.normalized.unitType,
+            barcode: norm.normalized.barcode?.slice(0, 64),
             sortOrder,
             catalogItemId,
           });

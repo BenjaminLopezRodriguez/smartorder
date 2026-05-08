@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { and, asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, sql } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { catalogItems, listItems, lists } from "~/server/db/schema";
+import { searchCatalog } from "~/server/catalog-search";
 
 const listStatusSchema = z.enum(["draft", "scanning", "review", "complete"]);
 
@@ -208,29 +209,7 @@ export const listsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const q = input.query.trim();
-      if (!q) {
-        return await ctx.db
-          .select()
-          .from(catalogItems)
-          .orderBy(desc(catalogItems.createdAt))
-          .limit(input.limit);
-      }
-
-      const pattern = `%${q}%`;
-      return await ctx.db
-        .select()
-        .from(catalogItems)
-        .where(
-          or(
-            ilike(catalogItems.name, pattern),
-            ilike(catalogItems.vendor, pattern),
-            ilike(catalogItems.category, pattern),
-            ilike(catalogItems.barcode, pattern),
-          ),
-        )
-        .orderBy(desc(catalogItems.createdAt))
-        .limit(input.limit);
+      return searchCatalog(input.query, { limit: input.limit, db: ctx.db });
     }),
 });
 

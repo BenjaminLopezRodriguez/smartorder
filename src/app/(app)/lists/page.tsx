@@ -5,20 +5,10 @@ import { type Metadata } from "next";
 import { api } from "~/trpc/server";
 import { Badge } from "~/components/ui/badge";
 import { EmptyState } from "~/components/ui/empty-state";
+import { getListStatus } from "~/features/lists/utils/status";
+import { formatShortDate } from "~/lib/format";
 
 export const metadata: Metadata = { title: "Lists" };
-
-const STATUS_MAP: Record<string, { label: string; tone: "brand" | "success" | "warning" | "neutral" }> = {
-  draft: { label: "Draft", tone: "neutral" },
-  scanning: { label: "In Progress", tone: "brand" },
-  review: { label: "Review", tone: "warning" },
-  complete: { label: "Completed", tone: "success" },
-};
-
-function formatDate(d: Date | null | undefined) {
-  if (!d) return "";
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-}
 
 export default async function ListsPage() {
   const lists = await api.lists.all({ limit: 50 });
@@ -54,7 +44,7 @@ export default async function ListsPage() {
       ) : (
         <ul className="bg-surface border-border divide-border divide-y overflow-hidden rounded-xl border shadow-card">
           {lists.map((list) => {
-            const s = STATUS_MAP[list.status] ?? STATUS_MAP.draft!;
+            const s = getListStatus(list.status);
             return (
               <li key={list.id}>
                 <Link
@@ -69,7 +59,7 @@ export default async function ListsPage() {
                       {list.name}
                     </p>
                     <p className="text-muted mt-0.5 text-xs">
-                      {formatDate(list.updatedAt)} · {list.itemCount} items
+                      {formatShortDate(list.updatedAt)} · {list.itemCount} items
                     </p>
                   </div>
                   <Badge tone={s.tone} size="sm">

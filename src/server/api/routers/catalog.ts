@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { desc, ilike, or } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { catalogItems } from "~/server/db/schema";
+import { searchCatalog } from "~/server/catalog-search";
 
 export const catalogRouter = createTRPCRouter({
   search: publicProcedure
@@ -13,29 +14,7 @@ export const catalogRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const q = input.query.trim();
-      if (!q) {
-        return await ctx.db
-          .select()
-          .from(catalogItems)
-          .orderBy(desc(catalogItems.createdAt))
-          .limit(input.limit);
-      }
-
-      const pattern = `%${q}%`;
-      return await ctx.db
-        .select()
-        .from(catalogItems)
-        .where(
-          or(
-            ilike(catalogItems.name, pattern),
-            ilike(catalogItems.vendor, pattern),
-            ilike(catalogItems.category, pattern),
-            ilike(catalogItems.barcode, pattern),
-          ),
-        )
-        .orderBy(desc(catalogItems.createdAt))
-        .limit(input.limit);
+      return searchCatalog(input.query, { limit: input.limit, db: ctx.db });
     }),
 
   create: publicProcedure
@@ -65,4 +44,3 @@ export const catalogRouter = createTRPCRouter({
       return created!;
     }),
 });
-

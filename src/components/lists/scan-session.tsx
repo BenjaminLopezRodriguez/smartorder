@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Minus, Package, Plus, X } from "lucide-react";
 
-import { api } from "~/trpc/react";
+import { useScanSession } from "~/features/lists/hooks/use-scan-session";
 
 type ListItem = {
   id: string;
@@ -23,7 +21,6 @@ type ListItem = {
 function BarcodeVisual({ value }: { value: string }) {
   return (
     <div className="flex flex-col items-center gap-1">
-      {/* CSS barcode stripes */}
       <div className="flex h-10 items-end gap-px overflow-hidden rounded-sm">
         {value.split("").map((char, i) => {
           const h = [60, 80, 100, 70, 90, 55, 75, 85, 65, 95][i % 10];
@@ -65,48 +62,8 @@ export function ScanSession({
   listId: string;
   initialItems: ListItem[];
 }) {
-  const router = useRouter();
-  const utils = api.useUtils();
-  const [idx, setIdx] = useState(0);
-
-  const { data } = api.lists.byId.useQuery({ id: listId });
-  const items: ListItem[] = (data?.items as ListItem[] | undefined) ?? initialItems;
-  const current = items[idx] ?? null;
-  const isLast = idx >= items.length - 1;
-
-  const update = api.lists.updateScanCounts.useMutation({
-    onSuccess: async () => {
-      await utils.lists.byId.invalidate({ id: listId });
-    },
-  });
-  const setStatus = api.lists.setStatus.useMutation();
-
-  function handleIncrement() {
-    if (!current) return;
-    update.mutate({
-      listItemId: current.id,
-      scannedCases: current.scannedCases + 1,
-      scannedUnits: current.scannedUnits,
-    });
-  }
-
-  function handleDecrement() {
-    if (!current) return;
-    update.mutate({
-      listItemId: current.id,
-      scannedCases: Math.max(0, current.scannedCases - 1),
-      scannedUnits: current.scannedUnits,
-    });
-  }
-
-  async function handleNext() {
-    if (isLast) {
-      await setStatus.mutateAsync({ listId, status: "review" });
-      router.push(`/lists/${listId}/review`);
-    } else {
-      setIdx((v) => v + 1);
-    }
-  }
+  const { current, idx, items, isLast, isPending, isFinishing, increment, decrement, advance, exit } =
+    useScanSession(listId, initialItems);
 
   if (!current) {
     return (
@@ -125,10 +82,10 @@ export function ScanSession({
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-white">
-      {/* Dark header */}
+      {/* Header */}
       <div className="bg-[#1b1b2e] flex items-center px-4 py-4">
         <button
-          onClick={() => router.push(`/lists/${listId}`)}
+          onClick={exit}
           aria-label="Exit scan"
           className="text-white/70 hover:text-white"
         >
@@ -142,10 +99,8 @@ export function ScanSession({
 
       {/* Scrollable content */}
       <div className="flex flex-1 flex-col items-center overflow-y-auto px-6 py-6">
-        {/* Product image */}
         <ProductThumb name={current.name} />
 
-        {/* Product info */}
         <div className="mt-5 text-center">
           <h2 className="text-foreground text-2xl font-bold">{current.name}</h2>
           <p className="text-muted mt-1 text-base">{current.packSize ?? current.unitType}</p>
@@ -154,7 +109,6 @@ export function ScanSession({
           )}
         </div>
 
-        {/* Barcode */}
         {current.barcode && (
           <div className="mt-5 w-full rounded-xl border border-gray-200 bg-white px-6 py-4">
             <BarcodeVisual value={current.barcode} />
@@ -164,9 +118,9 @@ export function ScanSession({
         {/* Count stepper */}
         <div className="mt-6 flex w-full items-center justify-between rounded-2xl border border-gray-200 px-6 py-4">
           <button
-            onClick={handleDecrement}
-            disabled={update.isPending || current.scannedCases === 0}
-            aria-label="Decrease"
+            onClick={decrement}
+            disabled={isPending || current.scannedCases === 0}
+            aria-label="Decrease count"
             className="text-brand flex h-12 w-12 items-center justify-center rounded-full border-2 border-current text-xl font-semibold disabled:opacity-30"
           >
             <Minus className="h-5 w-5" />
@@ -180,9 +134,9 @@ export function ScanSession({
           </div>
 
           <button
-            onClick={handleIncrement}
-            disabled={update.isPending}
-            aria-label="Increase"
+            onClick={increment}
+            disabled={isPending}
+            aria-label="Increase count"
             className="bg-brand flex h-12 w-12 items-center justify-center rounded-full text-white"
           >
             <Plus className="h-5 w-5" />
@@ -190,11 +144,11 @@ export function ScanSession({
         </div>
       </div>
 
-      {/* Fixed bottom actions */}
+      {/* Fixed bottom action */}
       <div className="border-border border-t bg-white px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4">
         <button
-          onClick={handleNext}
-          disabled={setStatus.isPending}
+          onClick={() => void advance()}
+          disabled={isFinishing}
           className="bg-brand text-brand-foreground flex h-14 w-full items-center justify-center rounded-xl text-base font-semibold shadow-sm disabled:opacity-60"
         >
           {isLast ? "Finish" : "Next"}
