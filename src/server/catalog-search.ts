@@ -38,7 +38,6 @@ export async function searchCatalog(
   }
 
   const lower = q.toLowerCase();
-  const prefixPattern = `${q}%`;
   const containsPattern = `%${q}%`;
 
   // Use a scored query via CASE expression so Postgres does one pass

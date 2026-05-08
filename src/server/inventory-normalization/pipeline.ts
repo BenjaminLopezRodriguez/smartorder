@@ -36,7 +36,7 @@ export function normalizeInventoryRow(input: {
     rawName: input.rawName,
     normalizedName: nameResult.normalized,
     vendor: vendorResult.vendor,
-    category: input.category?.trim() || undefined,
+    category: input.category?.trim() ?? undefined,
     packSize: packSize.value,
     unitType: unitType.value,
     barcode: barcodeResult.barcode,
@@ -76,7 +76,7 @@ function normalizePackSize(raw: string | null | undefined): {
   const cleaned = raw
     .trim()
     .replace(/\s+/g, " ")
-    .replace(/(\d+)\s*(ct|count|pk|pack|oz|lb|lbs|g|gal|ml|l)\b/gi, (_, n, u) =>
+    .replace(/(\d+)\s*(ct|count|pk|pack|oz|lb|lbs|g|gal|ml|l)\b/gi, (_, n: string, u: string) =>
       `${n}${u.toLowerCase()}`,
     );
 

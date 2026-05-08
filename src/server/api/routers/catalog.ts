@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { desc } from "drizzle-orm";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { catalogItems } from "~/server/db/schema";
