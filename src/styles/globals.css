@@ -3,8 +3,7 @@
 
 /**
  * SmartOrder design tokens.
- * Industrial / operational palette per master spec §11.
- * Hex values are the source of truth; semantic names are exposed to Tailwind below.
+ * Indigo-anchored palette — operational but not retailer-specific.
  */
 :root {
   --background: #f8fafc;
@@ -15,13 +14,24 @@
   --muted-foreground: #475569;
   --border: #e2e8f0;
   --border-strong: #cbd5e1;
-  --ring: #2563eb;
+  --ring: #4f46e5;
 
-  --brand: #2563eb;
-  --brand-hover: #1d4ed8;
+  /* Brand — indigo, not retail blue */
+  --brand: #4f46e5;
+  --brand-hover: #4338ca;
   --brand-foreground: #ffffff;
-  --brand-soft: #eff6ff;
-  --brand-soft-foreground: #1d4ed8;
+  --brand-soft: #eef2ff;
+  --brand-soft-foreground: #4338ca;
+
+  /* Dark sidebar */
+  --sidebar-bg: #0c0e14;
+  --sidebar-border: rgba(255, 255, 255, 0.07);
+  --sidebar-item-active: rgba(255, 255, 255, 0.09);
+  --sidebar-item-hover: rgba(255, 255, 255, 0.04);
+  --sidebar-text: #e2e8f0;
+  --sidebar-text-muted: #64748b;
+  --sidebar-icon-active: #a5b4fc;
+  --sidebar-indicator: #6366f1;
 
   --success: #22c55e;
   --success-soft: #dcfce7;
@@ -35,7 +45,6 @@
   --danger-soft: #fee2e2;
   --danger-foreground: #991b1b;
 
-  /* Elevation — flat, not glassy. */
   --shadow-xs: 0 1px 0 0 rgb(15 23 42 / 0.04);
   --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.06);
   --shadow-md: 0 4px 12px -2px rgb(15 23 42 / 0.08);
@@ -65,6 +74,15 @@
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-soft: var(--brand-soft);
   --color-brand-soft-foreground: var(--brand-soft-foreground);
+
+  --color-sidebar-bg: var(--sidebar-bg);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-item-active: var(--sidebar-item-active);
+  --color-sidebar-item-hover: var(--sidebar-item-hover);
+  --color-sidebar-text: var(--sidebar-text);
+  --color-sidebar-text-muted: var(--sidebar-text-muted);
+  --color-sidebar-icon-active: var(--sidebar-icon-active);
+  --color-sidebar-indicator: var(--sidebar-indicator);
 
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
@@ -105,14 +123,12 @@
     font-feature-settings: "ss01", "cv11";
   }
 
-  /* Calmer focus ring — visible without being loud. */
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
     border-radius: 6px;
   }
 
-  /* Prevent iOS auto-zoom on inputs while keeping desktop density. */
   @media (max-width: 640px) {
     input,
     select,
@@ -122,7 +138,6 @@
   }
 }
 
-/* Hide scrollbars on horizontal chip rails — keeps the operational density clean. */
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;

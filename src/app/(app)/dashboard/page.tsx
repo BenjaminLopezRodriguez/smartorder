@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Barcode, Bell, ChevronDown, ClipboardList, FileSpreadsheet, Plus } from "lucide-react";
+import { Barcode, ClipboardList, FileSpreadsheet, Plus } from "lucide-react";
 import { type Metadata } from "next";
 
 import { api } from "~/trpc/server";
@@ -27,29 +27,16 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-col">
-      {/* Mobile greeting header */}
-      <div className="flex items-start justify-between px-1 pb-5 pt-1 lg:hidden">
-        <div>
-          <h1 className="text-foreground text-xl font-bold">
-            {greeting}, Alex 👋
-          </h1>
-          <button className="text-muted mt-0.5 flex items-center gap-1 text-sm">
-            Downtown Office
-            <ChevronDown className="h-3.5 w-3.5" />
-          </button>
-        </div>
-        <button className="relative -mt-0.5">
-          <Bell className="text-foreground h-6 w-6" />
-          <span className="bg-brand absolute top-0 right-0 h-2 w-2 rounded-full" />
-        </button>
+      {/* Mobile greeting */}
+      <div className="px-1 pb-5 pt-1 lg:hidden">
+        <h1 className="text-foreground text-xl font-bold">{greeting}</h1>
+        <p className="text-muted mt-0.5 text-sm">Here's what's happening today.</p>
       </div>
 
       {/* Desktop greeting */}
       <div className="hidden pb-6 lg:block">
-        <h1 className="text-foreground text-2xl font-bold">
-          {greeting}, Alex 👋
-        </h1>
-        <p className="text-muted mt-1 text-sm">Downtown Office</p>
+        <h1 className="text-foreground text-2xl font-bold">{greeting}</h1>
+        <p className="text-muted mt-1 text-sm">Here's what's happening today.</p>
       </div>
 
       {/* Overview stats */}

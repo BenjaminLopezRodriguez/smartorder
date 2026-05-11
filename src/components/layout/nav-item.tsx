@@ -27,24 +27,24 @@ export function SidebarNavItem({
       aria-current={active ? "page" : undefined}
       className={cn(
         "group relative flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-surface",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-icon-active focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar-bg",
         active
-          ? "bg-brand-soft text-brand-soft-foreground"
-          : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",
+          ? "bg-sidebar-item-active text-sidebar-text"
+          : "text-sidebar-text-muted hover:bg-sidebar-item-hover hover:text-sidebar-text",
         collapsed && "justify-center px-0",
       )}
     >
       <Icon
         className={cn(
-          "h-[18px] w-[18px] shrink-0",
-          active ? "text-brand" : "text-muted",
+          "h-[18px] w-[18px] shrink-0 transition-colors",
+          active ? "text-sidebar-icon-active" : "text-sidebar-text-muted group-hover:text-sidebar-text",
         )}
       />
       {!collapsed && <span className="truncate">{label}</span>}
       {active && !collapsed ? (
         <span
           aria-hidden
-          className="bg-brand absolute top-1/2 left-0 h-5 w-[3px] -translate-y-1/2 rounded-r"
+          className="bg-sidebar-indicator absolute top-1/2 left-0 h-5 w-[3px] -translate-y-1/2 rounded-r"
         />
       ) : null}
     </Link>

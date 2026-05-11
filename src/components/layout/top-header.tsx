@@ -1,6 +1,6 @@
 "use client";
 
-import { Boxes, Menu, Search } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -19,11 +19,10 @@ export function TopHeader() {
   return (
     <header
       className={cn(
-        "bg-surface/85 border-border sticky top-0 z-30 flex h-14 items-center gap-3 border-b px-4 backdrop-blur sm:px-6",
-        "lg:flex",
+        "bg-surface/90 border-border sticky top-0 z-30 flex h-14 items-center gap-3 border-b px-4 backdrop-blur-sm sm:px-6",
       )}
     >
-      {/* Desktop sidebar toggle */}
+      {/* Desktop: sidebar toggle */}
       <Button
         variant="ghost"
         size="icon"
@@ -31,29 +30,27 @@ export function TopHeader() {
         onClick={toggleSidebar}
         aria-label="Toggle sidebar"
       >
-        <Menu className="h-5 w-5" />
+        <Menu className="h-[18px] w-[18px]" />
       </Button>
 
-      {/* Mobile brand — hidden when page has its own header (handled per-page) */}
+      {/* Mobile: wordmark */}
       <Link
         href="/dashboard"
         className="flex items-center gap-2 lg:hidden"
         aria-label="SmartOrder home"
       >
-        <span className="bg-brand text-brand-foreground flex h-7 w-7 items-center justify-center rounded-md">
-          <Boxes className="h-3.5 w-3.5" />
-        </span>
         <span className="text-foreground text-sm font-semibold tracking-tight">
           SmartOrder
         </span>
       </Link>
 
-      {/* Desktop page title */}
-      <h1 className="text-foreground hidden text-[15px] font-semibold tracking-tight lg:block">
+      {/* Desktop: page title */}
+      <span className="text-muted hidden text-[13px] lg:block">/</span>
+      <h1 className="text-foreground hidden text-[14px] font-medium lg:block">
         {title}
       </h1>
 
-      {/* Desktop search */}
+      {/* Desktop: centered search */}
       <div className="hidden flex-1 justify-center lg:flex">
         <DesktopSearchTrigger />
       </div>
@@ -80,10 +77,13 @@ function DesktopSearchTrigger() {
   return (
     <Link
       href="/search"
-      className="border-border-strong bg-surface text-muted hidden w-full max-w-md items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors hover:bg-surface-2 lg:flex"
+      className="border-border bg-surface-2 text-muted flex w-full max-w-sm items-center gap-2.5 rounded-lg border px-3 py-1.5 text-sm transition-colors hover:bg-surface hover:border-border-strong"
     >
-      <Search className="text-muted h-4 w-4 shrink-0" />
-      <span className="flex-1 text-left">Search inventory…</span>
+      <Search className="text-muted h-3.5 w-3.5 shrink-0" />
+      <span className="flex-1 text-left text-[13px]">Search inventory…</span>
+      <kbd className="bg-surface border-border hidden rounded border px-1.5 py-0.5 font-mono text-[10px] sm:block">
+        /
+      </kbd>
     </Link>
   );
 }

@@ -83,7 +83,7 @@ export function ScanSession({
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-white">
       {/* Header */}
-      <div className="bg-[#1b1b2e] flex items-center px-4 py-4">
+      <div className="bg-sidebar-bg flex items-center px-4 py-4">
         <button
           onClick={exit}
           aria-label="Exit scan"
