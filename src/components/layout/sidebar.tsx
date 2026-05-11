@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { ScanLine, Zap } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
@@ -64,10 +65,10 @@ export function Sidebar() {
               block
               className="justify-start bg-brand/90 text-white hover:bg-brand shadow-none"
             >
-              <a href="/lists/new">
+              <Link href="/lists/new">
                 <ScanLine className="h-[18px] w-[18px]" />
                 New scan session
-              </a>
+              </Link>
             </Button>
           </div>
         ) : null}

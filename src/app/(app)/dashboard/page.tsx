@@ -30,13 +30,13 @@ export default async function DashboardPage() {
       {/* Mobile greeting */}
       <div className="px-1 pb-5 pt-1 lg:hidden">
         <h1 className="text-foreground text-xl font-bold">{greeting}</h1>
-        <p className="text-muted mt-0.5 text-sm">Here's what's happening today.</p>
+        <p className="text-muted mt-0.5 text-sm">Here&apos;s what&apos;s happening today.</p>
       </div>
 
       {/* Desktop greeting */}
       <div className="hidden pb-6 lg:block">
         <h1 className="text-foreground text-2xl font-bold">{greeting}</h1>
-        <p className="text-muted mt-1 text-sm">Here's what's happening today.</p>
+        <p className="text-muted mt-1 text-sm">Here&apos;s what&apos;s happening today.</p>
       </div>
 
       {/* Overview stats */}
