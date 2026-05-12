@@ -9,6 +9,7 @@ type StoredBackroomSnapshot = {
   location: string;
   imageUrl: string;
   createdAt: number;
+  note?: string;
 };
 
 const STORAGE_KEY = "smartorder.backroom.snapshots.v1";
@@ -67,6 +68,7 @@ export function BackroomSnapshotsSection({
       estimatedCases: 0,
       status: "processing",
       imageUrl: s.imageUrl,
+      note: s.note,
     }));
     setLocalSnapshots(mapped);
   }, []);

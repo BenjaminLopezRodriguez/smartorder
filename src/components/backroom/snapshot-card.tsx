@@ -1,4 +1,4 @@
-import { Boxes, Calendar, ImageIcon } from "lucide-react";
+import { Boxes, Calendar, ImageIcon, MessageSquare } from "lucide-react";
 
 import { Badge } from "~/components/ui/badge";
 
@@ -14,6 +14,7 @@ export interface BackroomSnapshot {
   /** Whether AI processing is complete. */
   status: "processing" | "ready";
   imageUrl?: string;
+  note?: string;
 }
 
 interface SnapshotCardProps {
@@ -79,6 +80,13 @@ export function SnapshotCard({ snapshot }: SnapshotCardProps) {
             </dd>
           </div>
         </dl>
+
+        {snapshot.note ? (
+          <div className="mt-3 flex gap-2">
+            <MessageSquare className="text-muted mt-0.5 h-3.5 w-3.5 shrink-0" />
+            <p className="text-muted text-xs leading-snug">{snapshot.note}</p>
+          </div>
+        ) : null}
       </div>
     </article>
   );

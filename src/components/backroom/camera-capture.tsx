@@ -2,10 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Camera, Repeat2, Save, X } from "lucide-react";
+import { Camera, MessageSquare, Repeat2, Save, X } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { cn } from "~/lib/utils";
 
 type FacingMode = "user" | "environment";
@@ -15,6 +16,7 @@ type StoredBackroomSnapshot = {
   location: string;
   imageUrl: string;
   createdAt: number;
+  note?: string;
 };
 
 const STORAGE_KEY = "smartorder.backroom.snapshots.v1";
@@ -77,6 +79,7 @@ export function CameraCapture() {
   const [error, setError] = useState<string | null>(null);
   const [capturedDataUrl, setCapturedDataUrl] = useState<string | null>(null);
   const [location, setLocation] = useState("Backroom");
+  const [note, setNote] = useState("");
   const [savedAt, setSavedAt] = useState<number | null>(null);
 
   const canUseCamera = useMemo(() => {
@@ -139,6 +142,7 @@ export function CameraCapture() {
   function retake() {
     setCapturedDataUrl(null);
     setSavedAt(null);
+    setNote("");
   }
 
   function saveSnapshot() {
@@ -150,6 +154,7 @@ export function CameraCapture() {
       location: location.trim() || "Backroom",
       imageUrl: capturedDataUrl,
       createdAt: now,
+      note: note.trim() || undefined,
     };
 
     const existing = readStoredSnapshots();
@@ -247,6 +252,21 @@ export function CameraCapture() {
         )}
         <canvas ref={canvasRef} className="hidden" />
       </div>
+
+      {capturedDataUrl ? (
+        <div>
+          <label className="text-muted mb-1 block text-xs font-semibold tracking-wide uppercase">
+            <MessageSquare className="mr-1 inline h-3 w-3" />
+            Note (optional)
+          </label>
+          <Textarea
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="e.g. Rotation needed on bottom shelf. Dairy short on left side."
+            rows={2}
+          />
+        </div>
+      ) : null}
 
       <div className="flex flex-wrap gap-2">
         {!capturedDataUrl ? (

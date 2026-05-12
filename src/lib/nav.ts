@@ -4,6 +4,7 @@ import {
   LayoutGrid,
   Search,
   Settings,
+  Warehouse,
   type LucideIcon,
 } from "lucide-react";
 
@@ -44,6 +45,13 @@ export const PRIMARY_NAV: NavItem[] = [
     label: "Search",
     href: "/search",
     icon: Search,
+    mobile: true,
+  },
+  {
+    id: "backroom",
+    label: "Backroom",
+    href: "/backroom",
+    icon: Warehouse,
     mobile: true,
   },
   {
